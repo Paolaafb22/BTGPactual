@@ -1,8 +1,9 @@
-# app/main.py
 from fastapi import FastAPI
+from app.routers import auth
 
 app = FastAPI()
+app.include_router(auth.auth_router)
 
 @app.get("/")
-def read_root():
-    return {"message": "API BTG Pactual Fondos aqui vamos"}
+def root():
+    return {"message": "API BTG Pactual en ejecución"}
