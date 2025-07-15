@@ -1,4 +1,5 @@
 # app/core/database.py
+
 from pymongo import MongoClient
 import os
 from dotenv import load_dotenv
@@ -12,3 +13,6 @@ db = client["fondos_btg"]  # Nombre de la base de datos
 users_collection = db["users"]
 funds_collection = db["funds"]
 transactions_collection = db["transactions"]
+
+def get_db():
+    return db

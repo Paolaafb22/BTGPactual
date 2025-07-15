@@ -1,9 +1,11 @@
 # app/routers/auth.py
 from fastapi import APIRouter, HTTPException, status,Depends
+from fastapi.security import OAuth2PasswordRequestForm
+from jose import jwt, JWTError
 from app.schemas.user_schema import UserSignup
 from app.core.database import users_collection
 from app.core.security import ACCESS_TOKEN_EXPIRE_MINUTES
-from fastapi.security import OAuth2PasswordRequestForm
+
 
 from app.core.security import hash_password,verify_password, create_access_token
 from pymongo.errors import DuplicateKeyError
@@ -49,3 +51,16 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
         "access_token": access_token,
         "token_type": "bearer"
     }
+    
+def get_current_user(token: str = Depends(oauth2_scheme)):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        user_id: str = payload.get("sub")
+        if user_id is None:
+            raise HTTPException(status_code=401, detail="Token inválido")
+        user = users_collection.find_one({"id": user_id})
+        if not user:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+        return user
+    except JWTError:
+        raise HTTPException(status_code=403, detail="Token inválido")
