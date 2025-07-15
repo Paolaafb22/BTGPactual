@@ -1,0 +1,13 @@
+fastapi==0.116.1
+passlib==1.7.4
+pydantic==2.11.7
+pymongo==4.13.2
+python-dotenv==1.1.1
+passlib[bcrypt]
+python_jose==3.5.0
+uvicorn
+pytest
+httpx
+pydantic[email]
+python-multipart
+
